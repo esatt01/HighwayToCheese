@@ -5,16 +5,22 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] CharacterController characterController;
 
     [SerializeField] List<GameObject> Roads = new List<GameObject>();
 
     [SerializeField] Transform playerPrefab;
     [SerializeField] Transform carSpawn;
 
+    [SerializeField] GameObject pausePanel;
+
     float previousPlayerZ;
     float roadLenght = 3.17f;
 
     int count = 5;
+
+    public bool isActive;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +40,24 @@ public class GameManager : MonoBehaviour
         {
             CreateRoad();
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            isActive = !pausePanel.activeSelf;
+            pausePanel.SetActive(isActive);
+
+            if (isActive)
+            {
+                characterController.isAlive = false;
+                //Time.timeScale = 0f; // Oyunu durdur
+            }
+            else
+            {
+                characterController.isAlive = true;
+                //Time.timeScale = 1f; // Oyunu devam ettir
+            }
+        }
+
     }
 
     private void FixedUpdate()
@@ -48,6 +72,7 @@ public class GameManager : MonoBehaviour
         previousPlayerZ = playerPrefab.position.z;
     }
 
+
     void CreateRoad()
     {
         Instantiate(Roads[Random.Range(0, Roads.Count)], transform.forward * roadLenght, transform.rotation);
@@ -56,11 +81,22 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
+        characterController.isAlive = true;
+        //Time.timeScale = 1f;
         SceneManager.LoadScene(1);
     }
 
     public void BackToMenu()
     {
+        characterController.isAlive = true;
+        //Time.timeScale = 1f;
         SceneManager.LoadScene(0);
+    }
+
+    public void Continue()
+    {
+        pausePanel.SetActive(false);
+        characterController.isAlive = true;
+        //Time.timeScale = 1f;
     }
 }

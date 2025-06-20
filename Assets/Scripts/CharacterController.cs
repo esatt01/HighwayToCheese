@@ -96,7 +96,7 @@ public class CharacterController : MonoBehaviour
         if (other.gameObject.CompareTag("Cheese"))
         {
             score += 5;
-            speed += 0.05f;
+            speed += 0.2f;
             effectSource.clip = cheeseClip;
             effectSource.Play();
             Destroy(other.gameObject);

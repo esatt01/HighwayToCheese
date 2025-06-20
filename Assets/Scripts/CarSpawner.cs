@@ -58,7 +58,8 @@ public class CarSpawner : MonoBehaviour
             Transform spawnPoint = spawnPoints[randomIndex];
 
             //Peyniri üretmek
-            Instantiate(cheeses[0], spawnPoint.position + new Vector3(0,0.01f,0), spawnPoint.rotation);
+            Instantiate(cheeses[0], 
+                spawnPoint.position + new Vector3(0, 0.01f, 0), Quaternion.Euler(0, 200f, 0));
         }
     }
 }
