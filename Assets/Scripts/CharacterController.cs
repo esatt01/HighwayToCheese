@@ -11,7 +11,10 @@ public class CharacterController : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] float lateralSmoothSpeed = 10f; //Yumuþak geçiþ hýzým.
     [SerializeField] GameObject menuPanel;
+
     [SerializeField] TMP_Text scoreText;
+    [SerializeField] TMP_Text highScoretext;
+    [SerializeField] TMP_Text cheeseText;
 
     [SerializeField] AudioSource effectSource,musicSource;
     [SerializeField] AudioClip cheeseClip, deathClip;
@@ -24,10 +27,19 @@ public class CharacterController : MonoBehaviour
 
     public bool isAlive = true;
 
-    float score;
+    private float score;
+    private int cheeseCount = 0;
+
+
     void Start()
     {
         targetPosition = transform.position; //Baþlangýç hedefimizi belirliyor.
+
+        // High Score'u yükle
+        float savedHighScore = PlayerPrefs.GetFloat("HighScore", 0f);
+        highScoretext.text = "High Score: " + savedHighScore.ToString("f1");
+
+        cheeseText.text = "x 0";
     }
 
     // Update is called once per frame
@@ -37,18 +49,19 @@ public class CharacterController : MonoBehaviour
         {
             score += Time.deltaTime;
             scoreText.text = "Score: " + score.ToString("f1");
-            if (Input.GetKeyDown(KeyCode.A) && currentXpositionIndex > 0)
+
+            if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && currentXpositionIndex > 0)
             {
-                currentXpositionIndex--; //Mevcut deðeri 1 azaltmak için.
+                currentXpositionIndex--;
                 UpdateLateralPosition();
             }
-            else if (Input.GetKeyDown(KeyCode.D) && currentXpositionIndex < 2)
+            else if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && currentXpositionIndex < 2)
             {
                 currentXpositionIndex++;
                 UpdateLateralPosition();
             }
         }
-        
+
     }
 
     private void FixedUpdate()
@@ -75,6 +88,7 @@ public class CharacterController : MonoBehaviour
         targetPosition = new Vector3(xPosition[currentXpositionIndex], transform.position.y, transform.position.z);
     }
 
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Cars"))
@@ -87,19 +101,37 @@ public class CharacterController : MonoBehaviour
             effectSource.clip = deathClip;
             effectSource.Play();
             menuPanel.SetActive(true);
+
+            // High Score kontrolü ve güncelleme
+            float savedHighScore = PlayerPrefs.GetFloat("HighScore", 0f);
+            if (score > savedHighScore)
+            {
+                PlayerPrefs.SetFloat("HighScore", score);
+                PlayerPrefs.Save(); // Verileri kalýcý olarak kaydet
+            }
+
+            // Menüde güncel high score göster
+            highScoretext.text = "High Score: " + PlayerPrefs.GetFloat("HighScore").ToString("f1");
         }
     }
 
     //Peynir topladýkça olacaklar
-    private void OnTriggerEnter(Collider other)
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.CompareTag("Cheese"))
+    //    {
+    //        score += 5;
+    //        speed += 0.2f;
+    //    }
+    //}
+
+    public void CollectCheese()
     {
-        if (other.gameObject.CompareTag("Cheese"))
-        {
-            score += 5;
-            speed += 0.2f;
-            effectSource.clip = cheeseClip;
-            effectSource.Play();
-            Destroy(other.gameObject);
-        }
+        score += 5;
+        speed += 0.1f;
+        cheeseCount++; // Peynir sayýsýný artýr
+        cheeseText.text = "x " + cheeseCount.ToString();
+        effectSource.PlayOneShot(cheeseClip);
     }
+
 }

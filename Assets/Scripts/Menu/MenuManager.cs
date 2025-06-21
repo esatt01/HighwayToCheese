@@ -7,6 +7,11 @@ public class MenuManager : MonoBehaviour
 {
     [SerializeField] GameObject settingsPanel;
 
+    private void Update()
+    {
+        EscQuit();
+    }
+
     public void StartGame()
     {
 
@@ -25,5 +30,13 @@ public class MenuManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    private void EscQuit()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            settingsPanel.SetActive(false);
+        }
     }
 }

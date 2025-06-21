@@ -1,38 +1,34 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class VolumeControl : MonoBehaviour
+public class SpxControl : MonoBehaviour
 {
     public Slider volumeSlider;
     public AudioSource musicSource;
+    public AudioSource cheeseSpxSource;
 
     [Header("Sound Icons")]
     public Image soundIconImage;
     public Sprite soundOnSprite;
     public Sprite soundOffSprite;
 
-    private const string VolumePrefKey = "MusicVolume";
-    private const string MutePrefKey = "IsMuted";
+    private const string SpxPrefKey = "SpxVolume";
+    private const string MutedPrefKey = "IssMuted";
 
     private bool isMuted = false;
     private float lastVolume = 1f;
 
-
-    void Awake()
-    {
-        // Ses baþlamadan önce sustur
-        musicSource.volume = 0f;
-    }
-
-
-
     void Start()
     {
-        float savedVolume = PlayerPrefs.HasKey(VolumePrefKey) ? PlayerPrefs.GetFloat(VolumePrefKey) : 0.2f;
-        isMuted = PlayerPrefs.GetInt(MutePrefKey, 0) == 1;
+        float savedVolume = PlayerPrefs.HasKey(SpxPrefKey) ? PlayerPrefs.GetFloat(SpxPrefKey) : 0.3f;
+        isMuted = PlayerPrefs.GetInt(MutedPrefKey, 0) == 1;
 
         lastVolume = savedVolume;
         volumeSlider.value = savedVolume;
+        // Ýlk sesi ayarla
+        musicSource.volume = isMuted ? 0f : volumeSlider.value;
+        // Yeni kaynaðý da ayarla
+        cheeseSpxSource.volume = musicSource.volume;
 
         if (isMuted)
         {
@@ -52,20 +48,17 @@ public class VolumeControl : MonoBehaviour
     void SetVolume(float value)
     {
         lastVolume = value;
+        bool muteNow = value <= 0.001f;
+        isMuted = muteNow;
+        float vol = muteNow ? 0f : value;
 
-        if (value <= 0.001f)
-        {
-            isMuted = true;
-            musicSource.volume = 0f;
-        }
-        else
-        {
-            isMuted = false;
-            musicSource.volume = value;
-        }
+        // Her iki kaynaða uygula
+        musicSource.volume = vol;
+        cheeseSpxSource.volume = vol;
 
-        PlayerPrefs.SetFloat(VolumePrefKey, value);
-        PlayerPrefs.SetInt(MutePrefKey, isMuted ? 1 : 0);
+
+        PlayerPrefs.SetFloat(SpxPrefKey, value);
+        PlayerPrefs.SetInt(MutedPrefKey, isMuted ? 1 : 0);
         PlayerPrefs.Save();
 
         UpdateIcon();
@@ -75,17 +68,13 @@ public class VolumeControl : MonoBehaviour
     void ToggleMute()
     {
         isMuted = !isMuted;
+        float vol = isMuted ? 0f : lastVolume;
 
-        if (isMuted)
-        {
-            musicSource.volume = 0f;
-        }
-        else
-        {
-            musicSource.volume = lastVolume;
-        }
+        musicSource.volume = vol;
+        cheeseSpxSource.volume = vol;
 
-        PlayerPrefs.SetInt(MutePrefKey, isMuted ? 1 : 0);
+
+        PlayerPrefs.SetInt(MutedPrefKey, isMuted ? 1 : 0);
         PlayerPrefs.Save();
 
         UpdateIcon();

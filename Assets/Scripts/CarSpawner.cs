@@ -26,40 +26,57 @@ public class CarSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     IEnumerator SpawnCars()
     {
-        while (characterController.isAlive)
+        while (true)  // sonsuz döngü
         {
-            //Rastgele bir süre beklet
-            float randomTime  = Random.Range(minSpawnTime, maxSpawnTime);
-            yield return new WaitForSeconds(randomTime);
+            if (characterController.isAlive)
+            {
+                float randomTime = Random.Range(minSpawnTime, maxSpawnTime);
+                yield return new WaitForSeconds(randomTime);
 
-            //Rastgele bir referans noktasý seç
-            int randomIndex = Random.Range(0, spawnPoints.Length);
-            Transform spawnPoint = spawnPoints[randomIndex];
-
-            //Arabayý üretmek
-            Instantiate(carPrefabs[Random.Range(0, carPrefabs.Length)], spawnPoint.position, spawnPoint.rotation);
+                int randomIndex = Random.Range(0, spawnPoints.Length);
+                Transform spawnPoint = spawnPoints[randomIndex];
+                Instantiate(
+                  carPrefabs[Random.Range(0, carPrefabs.Length)],
+                  spawnPoint.position,
+                  spawnPoint.rotation
+                );
+            }
+            else
+            {
+                // Oyun duraksamýþ, bir frame bekle ve sonra tekrar kontrol et
+                yield return null;
+            }
         }
     }
+
     IEnumerator SpawnCheeses()
     {
-        while (characterController.isAlive)
+        while (true)
         {
-            //Rastgele bir süre beklet
-            float randomTime = Random.Range(cheeseSpawnMin, cheeseSpawnMax);
-            yield return new WaitForSeconds(randomTime);
+            if (characterController.isAlive)
+            {
+                //Rastgele bir süre beklet
+                float randomTime = Random.Range(cheeseSpawnMin, cheeseSpawnMax);
+                yield return new WaitForSeconds(randomTime);
 
-            //Rastgele bir referans noktasý seç
-            int randomIndex = Random.Range(0, spawnPoints.Length);
-            Transform spawnPoint = spawnPoints[randomIndex];
+                //Rastgele bir referans noktasý seç
+                int randomIndex = Random.Range(0, spawnPoints.Length);
+                Transform spawnPoint = spawnPoints[randomIndex];
 
-            //Peyniri üretmek
-            Instantiate(cheeses[0], 
-                spawnPoint.position + new Vector3(0, 0.01f, 0), Quaternion.Euler(0, 200f, 0));
+                //Peyniri üretmek
+                Instantiate(cheeses[0],
+                    spawnPoint.position + new Vector3(0, 0.01f, 0), Quaternion.Euler(0, 200f, 0));
+            }
+            else
+            {
+                // Oyun duraksamýþ, bir frame bekle ve sonra tekrar kontrol et
+                yield return null;
+            }
         }
     }
 }

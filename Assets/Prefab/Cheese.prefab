@@ -79,6 +79,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 47365cc78e5cfad41badc534e3d2b7e1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5341653225174236928}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: 47365cc78e5cfad41badc534e3d2b7e1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3219198655812329464}
   m_SourcePrefab: {fileID: 100100000, guid: 47365cc78e5cfad41badc534e3d2b7e1, type: 3}
 --- !u!1 &6191713008799637787 stripped
 GameObject:
@@ -106,3 +109,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.30166256, y: 0.22488499, z: 0.38775215}
   m_Center: {x: 4.440892e-16, y: 0.11244245, z: -0.000000014901163}
+--- !u!114 &3219198655812329464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6191713008799637787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fa17c69ee3f73b4e9e5b77b5ba0af08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cheeseClip: {fileID: 8300000, guid: 29bde6326b4c34ad8a12da475f79b50a, type: 3}
+  effectSource: {fileID: 0}
+  destroyDelay: 0.1

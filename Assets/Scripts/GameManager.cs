@@ -57,7 +57,6 @@ public class GameManager : MonoBehaviour
                 //Time.timeScale = 1f; // Oyunu devam ettir
             }
         }
-
     }
 
     private void FixedUpdate()
@@ -82,6 +81,7 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         characterController.isAlive = true;
+        isActive = true;
         //Time.timeScale = 1f;
         SceneManager.LoadScene(1);
     }
@@ -95,8 +95,9 @@ public class GameManager : MonoBehaviour
 
     public void Continue()
     {
-        pausePanel.SetActive(false);
         characterController.isAlive = true;
+        isActive = true;
+        pausePanel.SetActive(false);
         //Time.timeScale = 1f;
     }
 }
